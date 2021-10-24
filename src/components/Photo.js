@@ -26,7 +26,7 @@ const Photo = props => {
           <Box
             sx={{
               bgcolor: '#cfe8fc',
-              height: '100vh',
+              height: '100%',
               padding: '1em 2em',
               margin: '2rem 0rem',
             }}
