@@ -4,8 +4,8 @@ import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import CssBaseline from '@mui/material/CssBaseline'
 import Container from '@mui/material/Container'
-import Images from './Images'
-import Search from './Search'
+import Images from './Images/ImagesList'
+import Search from './Search/Search'
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
