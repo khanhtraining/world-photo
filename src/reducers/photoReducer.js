@@ -7,7 +7,6 @@ import {
 export const photoReducer = (state, action) => {
   switch (action.type) {
     case GET_IMAGES_REQUEST:
-      console.log(action.payload, 'get images request')
       return {
         ...state,
         get: {
@@ -17,7 +16,6 @@ export const photoReducer = (state, action) => {
         },
       }
     case GET_IMAGES_SUCCESS:
-      console.log(action.payload, 'get images success')
       return {
         ...state,
         get: {

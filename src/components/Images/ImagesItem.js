@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Box from '@mui/material/Box'
 import ImageListItem from '@mui/material/ImageListItem'
 import ImageListItemBar from '@mui/material/ImageListItemBar'
 import Avatar from '@mui/material/Avatar'
@@ -13,6 +12,7 @@ const ImagesItem = ({ item }) => {
   return (
     <ImageListItem key={item?.urls?.raw}>
       <img
+        className={classesStyle.img}
         src={`${item?.urls?.raw}?w=248&fit=crop&auto=format`}
         srcSet={`${item?.urls?.raw}?w=248&fit=crop&auto=format&dpr=2 2x`}
         alt={item?.alt_description}

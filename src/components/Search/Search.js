@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
-import CircularProgress from '@mui/material/CircularProgress'
 import { makeStyles } from '@mui/styles'
-import { useAppContext } from '../../AppContext'
+import SearchIcon from '@mui/icons-material/Search'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import CssBaseline from '@mui/material/CssBaseline'
+import {
+  getImagesRequest,
+  getImagesSuccess,
+  getImagesFail,
+} from '../../actions/photoAction'
+import Images from '../Images/ImagesList'
 
-function sleep(delay = 0) {
-  return new Promise(resolve => {
-    setTimeout(resolve, delay)
-  })
-}
+import { useAppContext } from '../../AppContext'
+import { getImagesData } from '../../api/imagesAPI'
+
 export const useHelperTextStyles = makeStyles(() => ({
   root: {
-    '& .MuiOutlinedInput-root': {
-      height: '45px',
+    '& .css-1o9s3wi-MuiInputBase-input-MuiOutlinedInput-input': {
+      height: '0.5rem',
       borderRadius: '0px',
     },
   },
@@ -21,71 +26,79 @@ export const useHelperTextStyles = makeStyles(() => ({
 
 export const Search = () => {
   const classes = useHelperTextStyles()
-  const [open, setOpen] = useState(false)
-  const [options, setOptions] = useState([])
-  const loading = open && options.length === 0
-  const [photoOption, setPhotoOption] = useState([])
+  const [searchData, setSearchData] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+
+  const handleChange = event => {
+    setSearchData(event.target.value)
+  }
+  const {
+    data: {
+      photo: {
+        get: { data: allListImages },
+      },
+    },
+    dispatch,
+  } = useAppContext()
+
+  const getImagesList = async () => {
+    dispatch(getImagesRequest())
+
+    try {
+      const res = await getImagesData()
+      dispatch(getImagesSuccess(res.data))
+    } catch (err) {
+      dispatch(getImagesFail(console.error('err')))
+    }
+  }
 
   useEffect(() => {
-    const active = true
-
-    if (!loading) {
-      return undefined
-    }
-
-    ;(async () => {
-      await sleep(1e3)
-
-      if (active) {
-        setOptions()
-      }
-    })()
-
-    return () => {
-      active = false
-    }
-  }, [loading])
-
-  useEffect(() => {
-    if (!open) {
-      setOptions([])
-    }
-  }, [open])
+    const filteredItems = allListImages?.filter(item =>
+      item?.user?.name?.toLocaleLowerCase().includes(searchData)
+    )
+    setSearchResults(filteredItems)
+    getImagesList()
+  }, [searchData])
 
   return (
-    <Autocomplete
-      className={classes.root}
-      id="asynchronous-demo"
-      sx={{ width: '100%' }}
-      open={open}
-      onOpen={() => {
-        setOpen(true)
-      }}
-      onClose={() => {
-        setOpen(false)
-      }}
-      isOptionEqualToValue={(option, value) => option.title === value.title}
-      getOptionLabel={option => option.title}
-      options={options}
-      loading={loading}
-      renderInput={params => (
-        <TextField
-          {...params}
-          label="Search..."
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <React.Fragment>
-                {loading ? (
-                  <CircularProgress color="inherit" size={20} />
-                ) : null}
-                {params.InputProps.endAdornment}
-              </React.Fragment>
-            ),
-          }}
-        />
-      )}
-    />
+    <React.Fragment>
+      <CssBaseline />
+      <Container fixed>
+        <Box sx={{ margin: '2rem 0rem' }}>
+          <Box>
+            <TextField
+              className={classes.root}
+              fullWidth
+              id="search"
+              name="name"
+              label="Search"
+              onChange={handleChange}
+              margin="dense"
+              InputProps={{
+                startAdornment: <SearchIcon />,
+              }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              bgcolor: '#cfe8fc',
+              height: '100%',
+              padding: '1em 2em',
+              margin: '2rem 0rem',
+            }}
+          >
+            {searchData === '' ? (
+              <Images allListImages={allListImages} />
+            ) : (
+              <Images allListImages={searchResults} />
+            )}
+          </Box>
+        </Box>
+      </Container>
+    </React.Fragment>
   )
 }
 
