@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import CircularProgress from '@mui/material/CircularProgress'
 import { makeStyles } from '@mui/styles'
+import { useAppContext } from '../../AppContext'
 
 function sleep(delay = 0) {
   return new Promise(resolve => {
@@ -18,24 +19,25 @@ export const useHelperTextStyles = makeStyles(() => ({
   },
 }))
 
-export const Search = props => {
+export const Search = () => {
   const classes = useHelperTextStyles()
-  const [open, setOpen] = React.useState(false)
-  const [options, setOptions] = React.useState([])
+  const [open, setOpen] = useState(false)
+  const [options, setOptions] = useState([])
   const loading = open && options.length === 0
+  const [photoOption, setPhotoOption] = useState([])
 
-  React.useEffect(() => {
-    let active = true
+  useEffect(() => {
+    const active = true
 
     if (!loading) {
       return undefined
     }
 
     ;(async () => {
-      await sleep(1e3) // For demo purposes.
+      await sleep(1e3)
 
       if (active) {
-        setOptions([...Name])
+        setOptions()
       }
     })()
 
@@ -44,7 +46,7 @@ export const Search = props => {
     }
   }, [loading])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!open) {
       setOptions([])
     }
@@ -86,21 +88,5 @@ export const Search = props => {
     />
   )
 }
-
-//example support create search UI and i will delete it after call api
-const Name = [
-  { title: 'City of God', year: 2002 },
-  { title: 'Se7en', year: 1995 },
-  { title: 'The Silence of the Lambs', year: 1991 },
-  { title: "It's a Wonderful Life", year: 1946 },
-  { title: 'Life Is Beautiful', year: 1997 },
-  { title: 'The Usual Suspects', year: 1995 },
-  { title: 'Léon: The Professional', year: 1994 },
-  { title: 'Spirited Away', year: 2001 },
-  { title: 'Saving Private Ryan', year: 1998 },
-  { title: 'Once Upon a Time in the West', year: 1968 },
-  { title: 'American History X', year: 1998 },
-  { title: 'Interstellar', year: 2014 },
-]
 
 export default Search
