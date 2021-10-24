@@ -5,9 +5,8 @@ export const AppContext = React.createContext({})
 
 export const AppContextProvider = props => {
   const { children } = props
-  console.log(children, 'children')
   const [data, dispatch] = useReducer(rootReducer, initialStateCombined)
-  console.log(data, 'data')
+
   return (
     <AppContext.Provider value={{ data, setData: dispatch }}>
       {children}
@@ -17,7 +16,6 @@ export const AppContextProvider = props => {
 
 export const useAppContext = () => {
   const { data, setData } = useContext(AppContext)
-  console.log(data, 'data in useAppContext')
   const dispatch = useCallback(
     action => {
       setData(action)

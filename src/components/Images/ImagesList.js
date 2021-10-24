@@ -1,18 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import ImageList from '@mui/material/ImageList'
-import ImageListItem from '@mui/material/ImageListItem'
-import ImageListItemBar from '@mui/material/ImageListItemBar'
-import {
-  getImagesRequest,
-  getImagesSuccess,
-  getImagesFail,
-} from '../../actions/photoAction'
-import { getImagesData } from '../../api/imagesAPI'
-import { useAppContext } from '../../AppContext'
-import ImagesItem from './ImagesItem'
-
 import { makeStyles } from '@mui/styles'
-import { autocompleteClasses } from '@mui/material'
+
+import ImagesItem from './ImagesItem'
 
 export const useStyles = makeStyles(() => ({
   bio: {
@@ -21,6 +11,9 @@ export const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     lineHeight: '20px',
+  },
+  img: {
+    height: '10rem',
   },
 }))
 export const useHelperTextStyles = makeStyles(() => ({
@@ -47,9 +40,6 @@ export const useHelperTextStyles = makeStyles(() => ({
     '& .MuiImageListItem-img': {
       height: '15rem',
     },
-    '& .css-186gwnw-MuiImageListItemBar-titleWrap': {
-      height: '2rem',
-    },
     '& .css-e53awj-MuiStack-root': {
       padding: '1rem',
       justifyContent: 'space-evenly',
@@ -68,31 +58,8 @@ export const useHelperTextStyles = makeStyles(() => ({
   },
 }))
 
-const ImagesList = () => {
+const ImagesList = ({ allListImages }) => {
   const classes = useHelperTextStyles()
-  const {
-    data: {
-      photo: {
-        get: { data: allListImages, fail: getAllListImagesFail },
-      },
-    },
-    dispatch,
-  } = useAppContext()
-  console.log(allListImages)
-  const [showPhoto, setShowPhoto] = useState(false)
-  const getImagesList = async () => {
-    dispatch(getImagesRequest())
-
-    try {
-      const res = await getImagesData()
-      dispatch(getImagesSuccess(res.data))
-    } catch (err) {
-      dispatch(getImagesFail(console.error('err')))
-    }
-  }
-  useEffect(() => {
-    getImagesList()
-  }, [])
   return (
     <ImageList className={classes.root} cols={4}>
       {allListImages?.map(item => {
