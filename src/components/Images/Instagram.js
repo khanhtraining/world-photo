@@ -11,11 +11,12 @@ const Instagram = ({ item }) => {
             href={`${URL_INSTAGRAM}/${item?.user?.social?.instagram_username}`}
             alt="url_ig"
           >
-            <InstagramIcon />
+            <InstagramIcon sx={{ fill: 'gray' }} />
           </a>
         ) : null}
       </div>
     )
   )
 }
+
 export default Instagram

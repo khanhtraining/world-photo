@@ -5,13 +5,14 @@ import SearchIcon from '@mui/icons-material/Search'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import CssBaseline from '@mui/material/CssBaseline'
+
 import {
   getImagesRequest,
   getImagesSuccess,
   getImagesFail,
 } from '../../actions/photoAction'
-import Images from '../Images/ImagesList'
 
+import Images from '../Images/ImagesList'
 import { useAppContext } from '../../AppContext'
 import { getImagesData } from '../../api/imagesAPI'
 
@@ -64,30 +65,33 @@ export const Search = () => {
     <React.Fragment>
       <CssBaseline />
       <Container fixed>
-        <Box sx={{ margin: '2rem 0rem' }}>
-          <Box>
+        <Box sx={{ margin: '0.8rem 0rem' }}>
+          <Box
+            sx={{
+              bgcolor: '#ffffff',
+              height: '100%',
+              padding: '1em 2em',
+              margin: '2rem 0rem',
+            }}
+          >
             <TextField
               className={classes.root}
               fullWidth
               id="search"
-              name="name"
-              label="Search"
+              name="search"
               onChange={handleChange}
               margin="dense"
               InputProps={{
                 startAdornment: <SearchIcon />,
               }}
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Box>
           <Box
             sx={{
-              bgcolor: '#cfe8fc',
+              bgcolor: '#ffffff',
               height: '100%',
               padding: '1em 2em',
-              margin: '2rem 0rem',
+              margin: '0.8rem 0rem',
             }}
           >
             {searchData === '' ? (
