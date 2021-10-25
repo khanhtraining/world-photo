@@ -6,9 +6,11 @@ import Stack from '@mui/material/Stack'
 import { useStyles } from './ImagesList'
 import Instagram from './Instagram'
 import Twitter from './Twitter'
+import Divider from '@mui/material/Divider'
 
 const ImagesItem = ({ item }) => {
   const classesStyle = useStyles()
+
   return (
     <ImageListItem key={item?.urls?.raw}>
       <img
@@ -19,26 +21,35 @@ const ImagesItem = ({ item }) => {
         loading="lazy"
       />
       <Stack direction="column" spacing={0}>
-        <Stack direction="row" spacing={2}>
+        <Stack
+          direction="row"
+          sx={{ justifyContent: 'space-evenly', padding: '17px 0px' }}
+        >
           <Avatar
             alt={item?.alt_description}
             src={item?.user?.profile_image?.small}
           />
-          <Stack direction="column" spacing={0}>
+          <Stack direction="column" margin={0}>
             <ImageListItemBar
+              className={classesStyle.author}
               position="below"
               title={`A photo by: ` + item?.user?.name}
             />
-            <ImageListItemBar
-              className={classesStyle.bio}
-              position="below"
-              title={item?.user?.bio}
-            />
+            <p className={classesStyle.bio}>{item?.user?.bio}</p>
           </Stack>
         </Stack>
-        <Stack direction="row" spacing={2}>
-          <Instagram key={item.id} item={item} />
-          <Twitter key={item.id} item={item} />
+        <Stack
+          className={classesStyle.stack}
+          sx={{ justifyContent: 'space-evenly', padding: '8px' }}
+          divider={<Divider orientation="vertical" flexItem />}
+          direction="row"
+        >
+          {item?.user?.social?.twitter_username ? (
+            <Twitter key={item.id} item={item} />
+          ) : null}
+          {item?.user?.social?.instagram_username ? (
+            <Instagram key={item.id} item={item} />
+          ) : null}
         </Stack>
       </Stack>
     </ImageListItem>
