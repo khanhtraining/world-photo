@@ -1,23 +1,24 @@
-import * as React from 'react'
+import React, { useContext } from 'react'
 import ImageListItem from '@mui/material/ImageListItem'
 import ImageListItemBar from '@mui/material/ImageListItemBar'
 import Avatar from '@mui/material/Avatar'
 import Stack from '@mui/material/Stack'
-import { useStyles } from './ImagesList'
 import Instagram from './Instagram'
 import Twitter from './Twitter'
 import Divider from '@mui/material/Divider'
+import { useStyles } from './useStyles'
+import { AppContext, useAppContext } from '../../AppContext'
 
-const ImagesItem = ({ item }) => {
+const ImagesItem = ({ data }) => {
   const classesStyle = useStyles()
 
   return (
-    <ImageListItem key={item?.urls?.raw}>
+    <ImageListItem>
       <img
         className={classesStyle.img}
-        src={`${item?.urls?.raw}?w=248&fit=crop&auto=format`}
-        srcSet={`${item?.urls?.raw}?w=248&fit=crop&auto=format&dpr=2 2x`}
-        alt={item?.alt_description}
+        src={`${data?.urls?.raw}?w=248&fit=crop&auto=format`}
+        srcSet={`${data?.urls?.raw}?w=248&fit=crop&auto=format&dpr=2 2x`}
+        alt={data?.alt_description}
         loading="lazy"
       />
       <Stack direction="column" spacing={0}>
@@ -26,16 +27,16 @@ const ImagesItem = ({ item }) => {
           sx={{ justifyContent: 'space-evenly', padding: '17px 0px' }}
         >
           <Avatar
-            alt={item?.alt_description}
-            src={item?.user?.profile_image?.small}
+            alt={data?.alt_description}
+            src={data?.user?.profile_image?.small}
           />
           <Stack direction="column" margin={0}>
             <ImageListItemBar
               className={classesStyle.author}
               position="below"
-              title={`A photo by: ` + item?.user?.name}
+              title={`A photo by: ` + `${data?.user?.name}`}
             />
-            <p className={classesStyle.bio}>{item?.user?.bio}</p>
+            <p className={classesStyle.bio}>{data?.user?.bio}</p>
           </Stack>
         </Stack>
         <Stack
@@ -44,12 +45,12 @@ const ImagesItem = ({ item }) => {
           divider={<Divider orientation="vertical" flexItem />}
           direction="row"
         >
-          {item?.user?.social?.twitter_username ? (
-            <Twitter key={item.id} item={item} />
-          ) : null}
-          {item?.user?.social?.instagram_username ? (
-            <Instagram key={item.id} item={item} />
-          ) : null}
+          {data?.user?.social?.twitter_username && (
+            <Twitter key={data.id} data={data} />
+          )}
+          {data?.user?.social?.instagram_username && (
+            <Instagram key={data.id} data={data} />
+          )}
         </Stack>
       </Stack>
     </ImageListItem>
