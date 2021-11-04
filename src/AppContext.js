@@ -1,26 +1,19 @@
-import React, { useCallback, useContext, useReducer } from 'react'
-import { initialStateCombined, rootReducer } from './reducers/rootReducer'
+import React, { createContext, useContext, useReducer } from 'react'
+import { photoInitState } from './components/initState/photoInitState'
+import { photoReducer } from './reducers/photoReducer'
 
-export const AppContext = React.createContext({})
+export const AppContext = createContext({})
 
 export const AppContextProvider = props => {
   const { children } = props
-  const [data, dispatch] = useReducer(rootReducer, initialStateCombined)
-
+  const [photosState, photosDispatch] = useReducer(photoReducer, photoInitState)
   return (
-    <AppContext.Provider value={{ data, setData: dispatch }}>
+    <AppContext.Provider value={{ photosState, photosDispatch }}>
       {children}
     </AppContext.Provider>
   )
 }
 
-export const useAppContext = () => {
-  const { data, setData } = useContext(AppContext)
-  const dispatch = useCallback(
-    action => {
-      setData(action)
-    },
-    [setData]
-  )
-  return { data, dispatch }
+export function useAppContext() {
+  return useContext(AppContext)
 }

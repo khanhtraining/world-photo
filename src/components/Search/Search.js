@@ -6,16 +6,19 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import CssBaseline from '@mui/material/CssBaseline'
 
+import queryString from 'query-string'
+import axios from 'axios'
+
 import {
   getImagesRequest,
   getImagesSuccess,
   getImagesFail,
 } from '../../actions/photoAction'
 
-import Images from '../Images/ImagesList'
+import ImagesList from '../Images/ImagesList'
 import { useAppContext } from '../../AppContext'
-import { getImagesData } from '../../api/imagesAPI'
-
+import { axiosInstance } from '../../api/axiosInstance'
+import Pagination from '../Images/Pagination'
 export const useHelperTextStyles = makeStyles(() => ({
   root: {
     '& .css-1o9s3wi-MuiInputBase-input-MuiOutlinedInput-input': {
@@ -27,39 +30,65 @@ export const useHelperTextStyles = makeStyles(() => ({
 
 export const Search = () => {
   const classes = useHelperTextStyles()
-  const [searchData, setSearchData] = useState('')
-  const [searchResults, setSearchResults] = useState([])
 
-  const handleChange = event => {
-    setSearchData(event.target.value)
+  const { photosDispatch } = useAppContext()
+
+  const [pagination, setPagination] = useState({
+    page: 1,
+    per_page: 10,
+  })
+
+  const [filters, setFilters] = useState({
+    per_page: 10,
+    page: 1,
+  })
+
+  const handlePageChange = newPage => {
+    setFilters({
+      ...filters,
+      page: newPage,
+    })
+    setPagination({
+      ...pagination,
+      page: newPage,
+    })
   }
-  const {
-    data: {
-      photo: {
-        get: { data: allListImages },
-      },
-    },
-    dispatch,
-  } = useAppContext()
 
   const getImagesList = async () => {
-    dispatch(getImagesRequest())
+    photosDispatch(getImagesRequest())
 
     try {
-      const res = await getImagesData()
-      dispatch(getImagesSuccess(res.data))
+      const paramString = queryString.stringify(filters)
+      const res = await axiosInstance().get(`/photos?${paramString}`)
+      photosDispatch(getImagesSuccess(res.data))
     } catch (err) {
-      dispatch(getImagesFail(console.error('err')))
+      photosDispatch(getImagesFail(err))
+    }
+  }
+
+  const searchByText = async searchText => {
+    photosDispatch(getImagesRequest())
+
+    try {
+      const paramString = queryString.stringify(filters)
+      const res = await axiosInstance().get(
+        `/search/photos?query=${searchText}&${paramString}`
+      )
+      photosDispatch(getImagesSuccess(res.data.results))
+    } catch (err) {
+      photosDispatch(getImagesFail(err))
+    }
+  }
+
+  const handleChangeInput = e => {
+    if (e.target.value.length > 0) {
+      searchByText(e.target.value)
     }
   }
 
   useEffect(() => {
-    const filteredItems = allListImages?.filter(item =>
-      item?.user?.name?.toLocaleLowerCase().includes(searchData)
-    )
-    setSearchResults(filteredItems)
     getImagesList()
-  }, [searchData])
+  }, [filters])
 
   return (
     <React.Fragment>
@@ -79,7 +108,7 @@ export const Search = () => {
               fullWidth
               id="search"
               name="search"
-              onChange={handleChange}
+              onChange={handleChangeInput}
               margin="dense"
               InputProps={{
                 startAdornment: <SearchIcon />,
@@ -94,16 +123,15 @@ export const Search = () => {
               margin: '0.8rem 0rem',
             }}
           >
-            {searchData === '' ? (
-              <Images allListImages={allListImages} />
-            ) : (
-              <Images allListImages={searchResults} />
-            )}
+            <Pagination
+              pagination={pagination}
+              onPageChange={handlePageChange}
+            />
+            <ImagesList />
           </Box>
         </Box>
       </Container>
     </React.Fragment>
   )
 }
-
 export default Search

@@ -2,13 +2,13 @@ import React from 'react'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import { URL_INSTAGRAM } from '../../constants'
 
-const Instagram = ({ item }) => {
+const Instagram = ({ data }) => {
   return (
-    item && (
+    data && (
       <div>
-        {item?.user?.social?.instagram_username ? (
+        {data?.user?.social?.instagram_username ? (
           <a
-            href={`${URL_INSTAGRAM}/${item?.user?.social?.instagram_username}`}
+            href={`${URL_INSTAGRAM}/${data?.user?.social?.instagram_username}`}
             alt="url_ig"
           >
             <InstagramIcon sx={{ fill: 'gray' }} />

@@ -3,11 +3,11 @@ import TwitterIcon from '@mui/icons-material/Twitter'
 
 import { URL_TWITTER } from '../../constants'
 
-const Twitter = ({ item }) => {
+const Twitter = ({ data }) => {
   return (
-    item && (
+    data && (
       <div>
-        <a href={`${URL_TWITTER}/${item?.user?.social?.twitter_username}`}>
+        <a href={`${URL_TWITTER}/${data?.user?.social?.twitter_username}`}>
           <TwitterIcon sx={{ fill: 'gray' }} />
         </a>
       </div>
