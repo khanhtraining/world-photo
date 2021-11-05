@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import ImageListItem from '@mui/material/ImageListItem'
 import ImageListItemBar from '@mui/material/ImageListItemBar'
 import Avatar from '@mui/material/Avatar'
@@ -7,7 +7,6 @@ import Instagram from './Instagram'
 import Twitter from './Twitter'
 import Divider from '@mui/material/Divider'
 import { useStyles } from './useStyles'
-import { AppContext, useAppContext } from '../../AppContext'
 
 const ImagesItem = ({ data }) => {
   const classesStyle = useStyles()
