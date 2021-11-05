@@ -32,22 +32,15 @@ export const Search = () => {
   const classes = useHelperTextStyles()
 
   const { photosDispatch } = useAppContext()
-
-  const [pagination, setPagination] = useState({
+  const [totalsPage, setTotalsPage] = useState(100)
+  const [searchText, setSearchText] = useState()
+  const initPagination = {
     page: 1,
-    per_page: 10,
-  })
-
-  const [filters, setFilters] = useState({
-    per_page: 10,
-    page: 1,
-  })
+    per_page: 12,
+  }
+  const [pagination, setPagination] = useState(initPagination)
 
   const handlePageChange = newPage => {
-    setFilters({
-      ...filters,
-      page: newPage,
-    })
     setPagination({
       ...pagination,
       page: newPage,
@@ -58,7 +51,7 @@ export const Search = () => {
     photosDispatch(getImagesRequest())
 
     try {
-      const paramString = queryString.stringify(filters)
+      const paramString = queryString.stringify(pagination)
       const res = await axiosInstance().get(`/photos?${paramString}`)
       photosDispatch(getImagesSuccess(res.data))
     } catch (err) {
@@ -66,29 +59,36 @@ export const Search = () => {
     }
   }
 
-  const searchByText = async searchText => {
+  const searchByText = async () => {
+    console.log(searchText, 'searchText')
     photosDispatch(getImagesRequest())
-
-    try {
-      const paramString = queryString.stringify(filters)
-      const res = await axiosInstance().get(
-        `/search/photos?query=${searchText}&${paramString}`
-      )
-      photosDispatch(getImagesSuccess(res.data.results))
-    } catch (err) {
-      photosDispatch(getImagesFail(err))
+    if (!searchText) {
+      getImagesList()
+    } else {
+      try {
+        const paramString = queryString.stringify(pagination)
+        const res = await axiosInstance().get(
+          `/search/photos?query=${searchText}&${paramString}`
+        )
+        console.log(res.data.total_pages, 'res.data')
+        setTotalsPage(res.data.total_pages)
+        photosDispatch(getImagesSuccess(res.data.results))
+      } catch (err) {
+        photosDispatch(getImagesFail(err))
+      }
     }
   }
 
   const handleChangeInput = e => {
     if (e.target.value.length > 0) {
-      searchByText(e.target.value)
+      setSearchText(e.target.value)
+      setPagination(e.target.value)
     }
   }
 
   useEffect(() => {
-    getImagesList()
-  }, [filters])
+    searchByText()
+  }, [pagination, searchText])
 
   return (
     <React.Fragment>
@@ -126,6 +126,7 @@ export const Search = () => {
             <Pagination
               pagination={pagination}
               onPageChange={handlePageChange}
+              totalsPage={totalsPage}
             />
             <ImagesList />
           </Box>
