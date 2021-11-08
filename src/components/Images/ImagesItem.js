@@ -7,12 +7,13 @@ import Instagram from './Instagram'
 import Twitter from './Twitter'
 import Divider from '@mui/material/Divider'
 import { useStyles } from './useStyles'
+import './layout.scss'
 
 const ImagesItem = ({ data }) => {
   const classesStyle = useStyles()
 
   return (
-    <ImageListItem>
+    <div className="images-item">
       <img
         className={classesStyle.img}
         src={`${data?.urls?.raw}?w=248&fit=crop&auto=format`}
@@ -26,16 +27,21 @@ const ImagesItem = ({ data }) => {
           sx={{ justifyContent: 'space-evenly', padding: '17px 0px' }}
         >
           <Avatar
+            className="avatar-test"
             alt={data?.alt_description}
             src={data?.user?.profile_image?.small}
           />
           <Stack direction="column" margin={0}>
             <ImageListItemBar
+              data-testid="author-id"
+              className="textitem-test"
               className={classesStyle.author}
               position="below"
               title={`A photo by: ` + `${data?.user?.name}`}
             />
-            <p className={classesStyle.bio}>{data?.user?.bio}</p>
+            <p data-testid="bio-id" className={classesStyle.bio}>
+              {data?.user?.bio}
+            </p>
           </Stack>
         </Stack>
         <Stack
@@ -52,7 +58,7 @@ const ImagesItem = ({ data }) => {
           )}
         </Stack>
       </Stack>
-    </ImageListItem>
+    </div>
   )
 }
 

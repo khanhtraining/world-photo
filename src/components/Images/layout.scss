@@ -1,22 +1,13 @@
-@media only screen and (min-width: 992px) {
-  .css-rvv586-MuiImageList-root {
-    // grid-template-columns: repeat(4, 1fr) !important;
-    gap: 50;
-  }
+.images-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex: 1 0 25%;
 }
-
-@media (min-width: 768px) and (max-width: 992px) {
-  .css-rvv586-MuiImageList-root {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 50;
-  }
+.images-item {
+  // flex: 1 0 20rem;
+  height: 100%;
+  width: 22rem;
+  margin: 2rem 2rem;
+  border: 0.1px solid rgb(190, 190, 190);
 }
-
-@media only screen and (max-width: 768px) {
-  .css-rvv586-MuiImageList-root {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 50;
-  }
-}
-
-// <768, 768-992, >992
