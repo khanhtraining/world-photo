@@ -31,7 +31,7 @@ export const useHelperTextStyles = makeStyles(() => ({
 export const Search = () => {
   const classes = useHelperTextStyles()
 
-  const { photosDispatch } = useAppContext()
+  const { photosDispatch, photosState } = useAppContext()
   const [totalsPage, setTotalsPage] = useState(100)
   const [searchText, setSearchText] = useState()
   const initPagination = {
@@ -48,7 +48,7 @@ export const Search = () => {
   }
 
   const getImagesList = async () => {
-    photosDispatch(getImagesRequest())
+    // photosDispatch(getImagesRequest())
 
     try {
       const paramString = queryString.stringify(pagination)
@@ -60,8 +60,7 @@ export const Search = () => {
   }
 
   const searchByText = async () => {
-    console.log(searchText, 'searchText')
-    photosDispatch(getImagesRequest())
+    // photosDispatch(getImagesRequest())
     if (!searchText) {
       getImagesList()
     } else {
@@ -92,46 +91,47 @@ export const Search = () => {
 
   return (
     <React.Fragment>
-      <CssBaseline />
-      <Container fixed>
-        <Box sx={{ margin: '0.8rem 0rem' }}>
-          <Box
-            sx={{
-              bgcolor: '#ffffff',
-              height: '100%',
-              padding: '1em 2em',
-              margin: '2rem 0rem',
+      <Box sx={{ margin: '0.8rem 0rem' }}>
+        <Box
+          sx={{
+            bgcolor: '#ffffff',
+            height: '100%',
+            padding: '1em 2em',
+            margin: '2rem 0rem',
+          }}
+        >
+          <TextField
+            data-testid="search-input"
+            className={classes.root}
+            aria-label="cost-input"
+            fullWidth
+            label="search"
+            id="search"
+            name="search"
+            onChange={handleChangeInput}
+            margin="dense"
+            InputProps={{
+              startAdornment: <SearchIcon />,
             }}
-          >
-            <TextField
-              className={classes.root}
-              fullWidth
-              id="search"
-              name="search"
-              onChange={handleChangeInput}
-              margin="dense"
-              InputProps={{
-                startAdornment: <SearchIcon />,
-              }}
-            />
-          </Box>
-          <Box
-            sx={{
-              bgcolor: '#ffffff',
-              height: '100%',
-              padding: '1em 2em',
-              margin: '0.8rem 0rem',
-            }}
-          >
-            <Pagination
-              pagination={pagination}
-              onPageChange={handlePageChange}
-              totalsPage={totalsPage}
-            />
-            <ImagesList />
-          </Box>
+          />
         </Box>
-      </Container>
+        <Box
+          sx={{
+            bgcolor: '#ffffff',
+            height: '100%',
+            padding: '1em 2em',
+            margin: '0.8rem 0rem',
+          }}
+        >
+          <Pagination
+            data-testid="pagination"
+            pagination={pagination}
+            onPageChange={handlePageChange}
+            totalsPage={totalsPage}
+          />
+          <ImagesList />
+        </Box>
+      </Box>
     </React.Fragment>
   )
 }

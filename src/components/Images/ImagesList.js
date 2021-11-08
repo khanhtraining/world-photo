@@ -8,16 +8,17 @@ import './layout.scss'
 
 const ImagesList = () => {
   const { photosState } = useAppContext()
-  const {
-    photo: { data },
-  } = photosState
+  // const {
+  //   photo: { data },
+  // } = photosState || {}
+  const photoData = photosState?.photo?.data
   const classes = useHelperTextStyles()
   return (
-    <ImageList className={classes.root} cols={4} gap={13}>
-      {data?.map((data, idx) => {
-        return <ImagesItem key={data.id} data={data} />
+    <div className="images-list">
+      {photoData?.map(photo => {
+        return <ImagesItem key={photo?.id} data={photo} />
       })}
-    </ImageList>
+    </div>
   )
 }
 

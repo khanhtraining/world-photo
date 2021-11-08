@@ -4,6 +4,10 @@ import { photoReducer } from './reducers/photoReducer'
 
 export const AppContext = createContext({})
 
+export function useAppContext() {
+  return useContext(AppContext)
+}
+
 export const AppContextProvider = props => {
   const { children } = props
   const [photosState, photosDispatch] = useReducer(photoReducer, photoInitState)
@@ -12,8 +16,4 @@ export const AppContextProvider = props => {
       {children}
     </AppContext.Provider>
   )
-}
-
-export function useAppContext() {
-  return useContext(AppContext)
 }
