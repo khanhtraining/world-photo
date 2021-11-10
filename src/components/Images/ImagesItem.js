@@ -1,5 +1,4 @@
 import React from 'react'
-import ImageListItem from '@mui/material/ImageListItem'
 import ImageListItemBar from '@mui/material/ImageListItemBar'
 import Avatar from '@mui/material/Avatar'
 import Stack from '@mui/material/Stack'
@@ -34,10 +33,9 @@ const ImagesItem = ({ data }) => {
           <Stack direction="column" margin={0}>
             <ImageListItemBar
               data-testid="author-id"
-              className="textitem-test"
               className={classesStyle.author}
               position="below"
-              title={`A photo by: ` + `${data?.user?.name}`}
+              title={`A photo by: ${data?.user?.name}`}
             />
             <p data-testid="bio-id" className={classesStyle.bio}>
               {data?.user?.bio}
@@ -50,12 +48,8 @@ const ImagesItem = ({ data }) => {
           divider={<Divider orientation="vertical" flexItem />}
           direction="row"
         >
-          {data?.user?.social?.twitter_username && (
-            <Twitter key={data.id} data={data} />
-          )}
-          {data?.user?.social?.instagram_username && (
-            <Instagram key={data.id} data={data} />
-          )}
+          {data?.user?.social?.twitter_username && <Twitter data={data} />}
+          {data?.user?.social?.instagram_username && <Instagram data={data} />}
         </Stack>
       </Stack>
     </div>

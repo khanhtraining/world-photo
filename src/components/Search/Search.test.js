@@ -1,63 +1,53 @@
-// import * as axios from 'axios'
-// import React from 'react'
-// import { render, fireEvent, waitFor } from '@testing-library/react'
-// import { screen } from '@testing-library/dom'
-// import { mockData } from '../../api/mockData'
+import React from 'react'
+import renderer from 'react-test-renderer'
 import Search from './Search'
-// import App from '../../App'
-// import Photo from '../Photo'
-// import { AppContextProvider } from '../../AppContext'
-// import ImagesList from '../Images/ImagesList'
-// import ImagesItem from '../Images/ImagesItem'
+import { render, fireEvent, waitFor, act } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
+import { AppContextProvider } from '../../AppContext'
+import axiosMock from 'axios'
 
-import { render, fireEvent, waitFor } from '@testing-library/react'
-import '@testing-library/jest-dom'
+jest.mock('axios')
 
-test('renders a message', () => {
-  const { container, getByText } = render(<Search />)
-  fireEvent.change(document.querySelector('input#search'), {
-    target: { value: '2222' },
-  })
-  // wait for data loaded
-  await waitFor(() => {
-    expect(
-      getByText(
-        /Nomadic photographer on a journey to embodiment. Everything is possible when you open your heart./,
-        {
-          selector: '.bio-id',
-        }
-      )
-    ).toBeInTheDocument()
-  })
-})
+const mockSetAction = jest.fn()
 
-// jest.mock('axios')
-
-// describe('User action', () => {
-//   test('should display photos list when user search input', async () => {
-//     // axios.get = jest.fn().mockResolvedValueOnce(mockData)
-//     const { container, queryByTestId, getByTestId, getByText } = render(
-//       <Search></Search>
+// test('should render Search correctly', () => {
+//   const tree = renderer
+//     .create(
+//       <AppContextProvider>
+//         <Search />
+//       </AppContextProvider>
 //     )
-//     // // console.log(container.debug(), 'container')
-//     // fireEvent.change(document.querySelector('input#search'), {
-//     //   target: { value: '2222' },
-//     // })
-//     // wait for data loaded
-//     // await waitFor(() => {
-//     //   expect(
-//     //     getByText(
-//     //       /Nomadic photographer on a journey to embodiment. Everything is possible when you open your heart./,
-//     //       {
-//     //         selector: '.bio-id',
-//     //       }
-//     //     )
-//     //   ).toBeInTheDocument()
-//     // })
-//     // expect(
-//     //   getByText(/A photo by: Ralph (Ravi) Kayden/, {
-//     //     selector: '.author-id',
-//     //   })
-//     // ).toBeInTheDocument()
-//   })
+//     .toJSON()
+//   expect(tree).toMatchSnapshot()
 // })
+
+test('render label search', () => {
+  const { getByTestId } = render(
+    <AppContextProvider value={{ data: {}, dispatch: mockSetAction }}>
+      <Search />
+    </AppContextProvider>
+  )
+  const inputSearch = getByTestId('search-input')
+
+  axiosMock.get.mockResolvedValueOnce({
+    title: 'Hello',
+    bio: 'Human Interface Designer at Apple',
+  })
+
+  expect(inputSearch.value).toEqual('')
+
+  act(() => {
+    fireEvent.change(inputSearch, { target: { value: 'Hello' } })
+  })
+
+  expect(inputSearch.value).toEqual('Hello')
+
+  waitFor(() => expect(axiosMock.get).toHaveBeenCalled())
+
+  // expect(mockSetAction).toHaveBeenCalledWith([
+  //   {
+  //     title: 'Hello',
+  //     bio: 'Human Interface Designer at Apple',
+  //   },
+  // ])
+})

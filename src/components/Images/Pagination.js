@@ -1,12 +1,11 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 import PaginationMUI from '@mui/material/Pagination'
 import { useStyles } from './useStyles'
 
 const Pagination = props => {
+  const { onPageChange, totalsPage } = props
   const classes = useStyles()
-  const { pagination, onPageChange, totalsPage } = props
-  const { page } = pagination
+
   const handlePageChange = newPage => {
     try {
       onPageChange(newPage.target.textContent)
@@ -15,25 +14,15 @@ const Pagination = props => {
 
   return (
     <div>
-      <div>Page: {page}</div>
       <PaginationMUI
+        classes={{ ul: classes.paginator }}
         count={totalsPage}
-        // page={page}
         variant="outlined"
         color="secondary"
         onChange={handlePageChange}
-        classes={{ ul: classes.paginator }}
       />
     </div>
   )
-}
-
-Pagination.propTypes = {
-  pagination: PropTypes.object.isRequired,
-  onPageChange: PropTypes.func,
-}
-Pagination.default = {
-  onPageChange: null,
 }
 
 export default Pagination
