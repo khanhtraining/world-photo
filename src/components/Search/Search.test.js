@@ -10,16 +10,16 @@ jest.mock('axios')
 
 const mockSetAction = jest.fn()
 
-// test('should render Search correctly', () => {
-//   const tree = renderer
-//     .create(
-//       <AppContextProvider>
-//         <Search />
-//       </AppContextProvider>
-//     )
-//     .toJSON()
-//   expect(tree).toMatchSnapshot()
-// })
+test('should render Search correctly', () => {
+  const tree = renderer
+    .create(
+      <AppContextProvider>
+        <Search />
+      </AppContextProvider>
+    )
+    .toJSON()
+  expect(tree).toMatchSnapshot()
+})
 
 test('render label search', () => {
   const { getByTestId } = render(
