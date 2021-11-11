@@ -17,7 +17,7 @@ import {
 import ImagesList from '../Images/ImagesList'
 import { useAppContext } from '../../AppContext'
 import { axiosInstance } from '../../api/axiosInstance'
-import Pagination from '../Images/Pagination'
+import PaginationImages from '../Images/PaginationImages'
 
 export const Search = () => {
   const { data, dispatch } = useAppContext()
@@ -94,7 +94,7 @@ export const Search = () => {
           <TextField
             fullWidth
             label="search"
-            id="search-text"
+            className="search-text"
             placeholder="Search..."
             name="search"
             onChange={handleChangeInput}
@@ -105,23 +105,22 @@ export const Search = () => {
             }}
           />
         </Box>
-        {(loadingState && <p>Loading...</p>) || (
-          <Box
-            sx={{
-              backgroundColor: '#ffffff',
-              height: '100%',
-              padding: '1em 2em',
-              margin: '0.8rem 0rem',
-            }}
-          >
-            <Pagination
-              pagination={pagination}
-              onPageChange={handlePageChange}
-              totalsPage={totalsPage}
-            />
-            <ImagesList />
-          </Box>
-        )}
+
+        <Box
+          sx={{
+            backgroundColor: '#ffffff',
+            height: '100%',
+            padding: '1em 2em',
+            margin: '0.8rem 0rem',
+          }}
+        >
+          <PaginationImages
+            pagination={pagination}
+            onPageChange={handlePageChange}
+            totalsPage={totalsPage}
+          />
+          {(loadingState && <p>Loading...</p>) || <ImagesList />}
+        </Box>
       </Box>
     </React.Fragment>
   )

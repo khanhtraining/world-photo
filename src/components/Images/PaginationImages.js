@@ -1,8 +1,8 @@
 import React from 'react'
-import PaginationMUI from '@mui/material/Pagination'
+import Pagination from '@mui/material/Pagination'
 import { useStyles } from './useStyles'
 
-const Pagination = props => {
+const PaginationImages = props => {
   const { onPageChange, totalsPage } = props
   const classes = useStyles()
 
@@ -14,15 +14,13 @@ const Pagination = props => {
 
   return (
     <div>
-      <PaginationMUI
-        classes={{ ul: classes.paginator }}
+      <Pagination
         count={totalsPage}
-        variant="outlined"
-        color="secondary"
         onChange={handlePageChange}
+        classes={{ ul: classes.paginator }}
       />
     </div>
   )
 }
 
-export default Pagination
+export default PaginationImages
