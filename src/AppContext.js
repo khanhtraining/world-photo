@@ -10,9 +10,9 @@ export function useAppContext() {
 
 export const AppContextProvider = props => {
   const { children } = props
-  const [photosState, photosDispatch] = useReducer(photoReducer, photoInitState)
+  const [data, dispatch] = useReducer(photoReducer, photoInitState)
   return (
-    <AppContext.Provider value={{ photosState, photosDispatch }}>
+    <AppContext.Provider value={{ data, dispatch }}>
       {children}
     </AppContext.Provider>
   )

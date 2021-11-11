@@ -1,22 +1,16 @@
 import React from 'react'
-import ImageList from '@mui/material/ImageList'
 
 import ImagesItem from './ImagesItem'
-import { useHelperTextStyles } from './useStyles'
 import { useAppContext } from '../../AppContext'
 import './layout.scss'
 
 const ImagesList = () => {
-  const { photosState } = useAppContext()
-  // const {
-  //   photo: { data },
-  // } = photosState || {}
-  const photoData = photosState?.photo?.data
-  const classes = useHelperTextStyles()
+  const { data } = useAppContext()
+  const photoData = data?.photo?.data
   return (
     <div className="images-list">
-      {photoData?.map(photo => {
-        return <ImagesItem key={photo?.id} data={photo} />
+      {photoData?.map((photo, idx) => {
+        return <ImagesItem key={idx} data={photo} />
       })}
     </div>
   )

@@ -1,39 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
-import { makeStyles } from '@mui/styles'
 import SearchIcon from '@mui/icons-material/Search'
 import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
-import CssBaseline from '@mui/material/CssBaseline'
 
 import queryString from 'query-string'
-import axios from 'axios'
 
 import {
   getImagesRequest,
   getImagesSuccess,
   getImagesFail,
+  searchImagesRequest,
+  searchImagesSuccess,
+  searchImagesFail,
 } from '../../actions/photoAction'
 
 import ImagesList from '../Images/ImagesList'
 import { useAppContext } from '../../AppContext'
 import { axiosInstance } from '../../api/axiosInstance'
-import Pagination from '../Images/Pagination'
-export const useHelperTextStyles = makeStyles(() => ({
-  root: {
-    '& .css-1o9s3wi-MuiInputBase-input-MuiOutlinedInput-input': {
-      height: '0.5rem',
-      borderRadius: '0px',
-    },
-  },
-}))
+import PaginationImages from '../Images/PaginationImages'
 
 export const Search = () => {
-  const classes = useHelperTextStyles()
-
-  const { photosDispatch, photosState } = useAppContext()
+  const { data, dispatch } = useAppContext()
   const [totalsPage, setTotalsPage] = useState(100)
   const [searchText, setSearchText] = useState()
+
+  const loadingState = data?.photo?.loading
   const initPagination = {
     page: 1,
     per_page: 12,
@@ -48,19 +39,19 @@ export const Search = () => {
   }
 
   const getImagesList = async () => {
-    // photosDispatch(getImagesRequest())
+    dispatch(getImagesRequest())
 
     try {
       const paramString = queryString.stringify(pagination)
       const res = await axiosInstance().get(`/photos?${paramString}`)
-      photosDispatch(getImagesSuccess(res.data))
+      dispatch(getImagesSuccess(res.data))
     } catch (err) {
-      photosDispatch(getImagesFail(err))
+      dispatch(getImagesFail(err))
     }
   }
 
   const searchByText = async () => {
-    // photosDispatch(getImagesRequest())
+    dispatch(searchImagesRequest())
     if (!searchText) {
       getImagesList()
     } else {
@@ -69,11 +60,11 @@ export const Search = () => {
         const res = await axiosInstance().get(
           `/search/photos?query=${searchText}&${paramString}`
         )
-        console.log(res.data.total_pages, 'res.data')
         setTotalsPage(res.data.total_pages)
-        photosDispatch(getImagesSuccess(res.data.results))
+        console.log(res.data.results, 'res.data.results')
+        dispatch(searchImagesSuccess(res.data.results))
       } catch (err) {
-        photosDispatch(getImagesFail(err))
+        dispatch(searchImagesFail(err))
       }
     }
   }
@@ -94,42 +85,41 @@ export const Search = () => {
       <Box sx={{ margin: '0.8rem 0rem' }}>
         <Box
           sx={{
-            bgcolor: '#ffffff',
+            backgroundColor: '#ffffff',
             height: '100%',
             padding: '1em 2em',
             margin: '2rem 0rem',
           }}
         >
           <TextField
-            data-testid="search-input"
-            className={classes.root}
-            aria-label="cost-input"
             fullWidth
             label="search"
-            id="search"
+            className="search-text"
+            placeholder="Search..."
             name="search"
             onChange={handleChangeInput}
             margin="dense"
+            inputProps={{ 'data-testid': 'search-input' }}
             InputProps={{
               startAdornment: <SearchIcon />,
             }}
           />
         </Box>
+
         <Box
           sx={{
-            bgcolor: '#ffffff',
+            backgroundColor: '#ffffff',
             height: '100%',
             padding: '1em 2em',
             margin: '0.8rem 0rem',
           }}
         >
-          <Pagination
-            data-testid="pagination"
+          <PaginationImages
             pagination={pagination}
             onPageChange={handlePageChange}
             totalsPage={totalsPage}
           />
-          <ImagesList />
+          {(loadingState && <p>Loading...</p>) || <ImagesList />}
         </Box>
       </Box>
     </React.Fragment>
