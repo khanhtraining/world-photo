@@ -8,18 +8,54 @@ import Divider from '@mui/material/Divider'
 import { useStyles } from './useStyles'
 import './layout.scss'
 
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import Modal from '@mui/material/Modal'
+
 const ImagesItem = ({ data }) => {
   const classesStyle = useStyles()
-
+  const [open, setOpen] = React.useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  }
   return (
     <div className="images-item">
-      <img
-        className={classesStyle.img}
-        src={`${data?.urls?.raw}?w=248&fit=crop&auto=format`}
-        srcSet={`${data?.urls?.raw}?w=248&fit=crop&auto=format&dpr=2 2x`}
-        alt={data?.alt_description}
-        loading="lazy"
-      />
+      <Button onClick={handleOpen}>
+        <img
+          className={classesStyle.img}
+          src={`${data?.urls?.raw}?w=248&fit=crop&auto=format`}
+          srcSet={`${data?.urls?.raw}?w=248&fit=crop&auto=format&dpr=2 2x`}
+          alt={data?.alt_description}
+          loading="lazy"
+        />
+      </Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            A photo by: {data?.user?.name}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {data?.user?.bio}
+          </Typography>
+        </Box>
+      </Modal>
+
       <Stack direction="column" spacing={0}>
         <Stack
           direction="row"
