@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import TextField from '@mui/material/TextField'
 import SearchIcon from '@mui/icons-material/Search'
 import Box from '@mui/material/Box'
+import Modal from '@mui/material/Modal'
 
 import queryString from 'query-string'
+import debounce from 'lodash.debounce'
 
 import {
   getImagesRequest,
@@ -22,9 +24,9 @@ import PaginationImages from '../Images/PaginationImages'
 export const Search = () => {
   const { data, dispatch } = useAppContext()
   const [totalsPage, setTotalsPage] = useState(100)
-  const [searchText, setSearchText] = useState()
-
+  const [isLoading, setIsLoading] = useState(false)
   const loadingState = data?.photo?.loading
+
   const initPagination = {
     page: 1,
     per_page: 12,
@@ -50,7 +52,7 @@ export const Search = () => {
     }
   }
 
-  const searchByText = async () => {
+  const searchByText = async searchText => {
     dispatch(searchImagesRequest())
     if (!searchText) {
       getImagesList()
@@ -61,24 +63,29 @@ export const Search = () => {
           `/search/photos?query=${searchText}&${paramString}`
         )
         setTotalsPage(res.data.total_pages)
-        console.log(res.data.results, 'res.data.results')
+        // setIsLoading(true)
         dispatch(searchImagesSuccess(res.data.results))
       } catch (err) {
         dispatch(searchImagesFail(err))
+      } finally {
       }
     }
   }
 
+  const debounceSearch = useRef(
+    debounce(searchText => searchByText(searchText), 300)
+  ).current
+
   const handleChangeInput = e => {
     if (e.target.value.length > 0) {
-      setSearchText(e.target.value)
-      setPagination(e.target.value)
+      debounceSearch(e.target.value)
+      // setPagination(e.target.value)
     }
   }
 
   useEffect(() => {
     searchByText()
-  }, [pagination, searchText])
+  }, [pagination])
 
   return (
     <React.Fragment>
@@ -119,7 +126,8 @@ export const Search = () => {
             onPageChange={handlePageChange}
             totalsPage={totalsPage}
           />
-          {(loadingState && <p>Loading...</p>) || <ImagesList />}
+          {(isLoading && <p>Loading...</p>) || <ImagesList />}
+          {/* <ImagesList /> */}
         </Box>
       </Box>
     </React.Fragment>
