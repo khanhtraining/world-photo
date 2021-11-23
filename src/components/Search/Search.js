@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react'
 import TextField from '@mui/material/TextField'
 import SearchIcon from '@mui/icons-material/Search'
 import Box from '@mui/material/Box'
-import Modal from '@mui/material/Modal'
 
 import queryString from 'query-string'
 import debounce from 'lodash.debounce'
@@ -72,14 +71,12 @@ export const Search = () => {
     }
   }
 
-  const debounceSearch = useRef(
-    debounce(searchText => searchByText(searchText), 300)
-  ).current
+  const debounceSearch = debounce(searchText => searchByText(searchText), 300)
 
   const handleChangeInput = e => {
     if (e.target.value.length > 0) {
       debounceSearch(e.target.value)
-      // setPagination(e.target.value)
+      setPagination(e.target.value)
     }
   }
 
